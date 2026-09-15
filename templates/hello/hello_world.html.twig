@@ -1,0 +1,40 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello World{% endblock %}
+
+{% block stylesheets %}
+    <style>
+        .hello-box {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: #666;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            padding-top: 1vh;
+            min-height: 100vh;
+            margin: 0;
+        }
+        .hello-card {
+            background: #ffffff;
+            width: 80%;
+            padding: 15px;
+            border-radius: 12px;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.25), 0 10px 20px rgba(0, 0, 0, 0.15);
+        }
+        .hello-card h1 {
+            margin: 0;
+            font-size: 2.5rem;
+            font-weight: 500;
+            color: #555;
+            text-align: center;
+        }
+    </style>
+{% endblock %}
+
+{% block body %}
+    <div class="hello-box">
+        <div class="hello-card">
+            <h1>Hello World</h1>
+        </div>
+    </div>
+{% endblock %}

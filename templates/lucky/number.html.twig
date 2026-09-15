@@ -1,0 +1,67 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Tirage au sort{% endblock %}
+
+{% block stylesheets %}
+    <style>
+        .number-box {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: #666;
+            display: flex;
+            flex-direction: row;
+            align-items: flex-start;
+            justify-content: center;
+            padding-top: 1vh;
+            min-height: 100vh;
+            margin: 0;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+        .number-card {
+            padding: 15px;
+            border-radius: 12px;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.25), 0 10px 20px rgba(0, 0, 0, 0.15);
+            width: fit-content;
+            text-align: center;
+            background: #000000;
+            color: #ffffff;
+        }
+        .number-card.red {
+            background: #dc3545;
+        }
+        .number-card h2 {
+            margin: 0;
+            font-size: 2rem;
+            font-weight: 500;
+            text-align: center;
+        }
+        .title-card {
+            background: #ffffff;
+            padding: 15px;
+            border-radius: 12px;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.25), 0 10px 20px rgba(0, 0, 0, 0.15);
+            width: fit-content;
+            text-align: center;
+        }
+        .title-card h2 {
+            margin: 0;
+            font-size: 2rem;
+            font-weight: 500;
+            text-align: center;
+            color: #555;
+        }
+    </style>
+{% endblock %}
+
+{% block body %}
+    <div class="number-box">
+        <div class="title-card">
+            <h2>Tirage au sort</h2>
+        </div>
+        {% for number in numbers %}
+            <div class="number-card {{ number is even ? 'red' : '' }}">
+                <h2>{{ number }}</h2>
+            </div>
+        {% endfor %}
+    </div>
+{% endblock %}
