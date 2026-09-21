@@ -1,0 +1,41 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Créer un ingrédient v2{% endblock %}
+
+{% block stylesheets %}
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f5f5f5;
+            margin: 0;
+            padding: 2rem;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+    </style>
+{% endblock %}
+
+{% block body %}
+    <div class="container">
+        <h1>Créer un ingrédient v2</h1>
+        {{ form_start(crea_form) }}
+            <div>
+                {{ form_label(crea_form.nom) }}
+                {{ form_errors(crea_form.nom) }}
+                {{ form_widget(crea_form.nom) }}
+                {{ form_help(crea_form.nom) }}
+            </div>
+            <div>
+                {{ form_label(crea_form.prix) }}
+                {{ form_errors(crea_form.prix) }}
+                {{ form_widget(crea_form.prix) }}
+                {{ form_help(crea_form.prix) }}
+            </div>
+            <div>
+                {{ form_row(crea_form.save) }}
+            </div>
+        {{ form_end(crea_form) }}
+    </div>
+{% endblock %}

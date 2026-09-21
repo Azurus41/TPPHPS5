@@ -45,6 +45,12 @@
 
 {% block body %}
     <div class="container">
+        {% for message in app.flashes('success') %}
+            <div class="alert alert-success">
+                {{ message }}
+            </div>
+        {% endfor %}
+
         <p>Ingrédients et prix</p>
 
         <ul>

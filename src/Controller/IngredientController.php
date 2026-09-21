@@ -8,6 +8,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use App\Form\IngredientFormType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -82,7 +83,11 @@ final class IngredientController extends AbstractController
     #[Route('/ingredient/create', name: 'ingredient.create', methods: ['GET', 'POST'])]
     public function create(Request $request, EntityManagerInterface $entityManager): Response
     {
-        $crea_form = $this->createFormBuilder()
+        $ingredient = new Ingredient();
+        $ingredient->setNom('poivre');
+        $ingredient->setPrix(10);
+
+        $crea_form = $this->createFormBuilder($ingredient)
             ->setAction($this->generateUrl('ingredient.store'))
             ->setMethod('POST')
             ->add('nom', TextType::class)
@@ -108,5 +113,57 @@ final class IngredientController extends AbstractController
         $entityManager->flush();
 
         return $this->redirectToRoute('app_ingredient_index');
+    }
+
+    #[Route('/ingredient/create_and_store', name: 'ingredient.create_and_store', methods: ['GET', 'POST'])]
+    public function create_and_store(Request $request, EntityManagerInterface $entityManager): Response
+    {
+        $ingredient = new Ingredient();
+        $crea_form = $this->createFormBuilder($ingredient)
+            ->setAction($this->generateUrl('ingredient.create_and_store'))
+            ->setMethod('POST')
+            ->add('nom', TextType::class)
+            ->add('prix', NumberType::class)
+            ->add('save', SubmitType::class, ['label' => 'Créer'])
+            ->getForm();
+
+        $crea_form->handleRequest($request);
+
+        if ($crea_form->isSubmitted() && $crea_form->isValid()) {
+            $data = $crea_form->getData();
+            $ingredient->setNom($data->getNom());
+            $ingredient->setPrix($data->getPrix());
+
+            $entityManager->persist($ingredient);
+            $entityManager->flush();
+
+            return $this->redirectToRoute('app_ingredient_index');
+        }
+
+        return $this->render('ingredient/create_and_store.html.twig', [
+            'crea_form' => $crea_form->createView(),
+        ]);
+    }
+
+    #[Route('/ingredient/create_and_store_v2', name: 'ingredient.create_and_store_v2', methods: ['GET', 'POST'])]
+    public function create_and_store_v2(Request $request, EntityManagerInterface $entityManager): Response
+    {
+        $ingredient = new Ingredient();
+        $crea_form = $this->createForm(IngredientFormType::class, $ingredient);
+
+        $crea_form->handleRequest($request);
+
+        if ($crea_form->isSubmitted() && $crea_form->isValid()) {
+            $entityManager->persist($ingredient);
+            $entityManager->flush();
+
+            $this->addFlash('success', 'Votre ingrédient a bien été créé avec succès !');
+
+            return $this->redirectToRoute('app_ingredient_index');
+        }
+
+        return $this->render('ingredient/create_v2.html.twig', [
+            'crea_form' => $crea_form->createView(),
+        ]);
     }
 }
