@@ -21,9 +21,21 @@
     <div class="container">
         <h1>Créer un ingrédient v2</h1>
         {{ form_start(crea_form) }}
-            {{ form_row(crea_form.nom) }}
-            {{ form_row(crea_form.prix) }}
-            {{ form_row(crea_form.save) }}
+            <div>
+                {{ form_label(crea_form.nom) }}
+                {{ form_errors(crea_form.nom) }}
+                {{ form_widget(crea_form.nom) }}
+                {{ form_help(crea_form.nom) }}
+            </div>
+            <div>
+                {{ form_label(crea_form.prix) }}
+                {{ form_errors(crea_form.prix) }}
+                {{ form_widget(crea_form.prix) }}
+                {{ form_help(crea_form.prix) }}
+            </div>
+            <div>
+                {{ form_row(crea_form.save) }}
+            </div>
         {{ form_end(crea_form) }}
     </div>
 {% endblock %}
