@@ -54,9 +54,9 @@ class Ingredient
         return $this->prix;
     }
 
-    public function setPrix(float $prix): static
+    public function setPrix(float|string $prix): static
     {
-        $this->prix = $prix;
+        $this->prix = is_numeric($prix) ? (float) $prix : 0.0;
 
         return $this;
     }
