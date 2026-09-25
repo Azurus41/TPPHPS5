@@ -63,6 +63,8 @@
             {% endfor %}
         </ul>
 
+        <a href="{{ path('ingredient.create_and_store_v3') }}" class="btn btn-primary mb-3">Créer un ingrédient</a>
+
         <table>
             <thead>
                 <tr>
@@ -74,12 +76,19 @@
             </thead>
             <tbody>
                 {% for ingredient in ingredients %}
-                    <tr>
-                        <td>{{ ingredient.id }}</td>
-                        <td>{{ ingredient.nom }}</td>
-                        <td>{{ ingredient.prix|number_format(2, ',', ' ') }}</td>
-                        <td>{{ ingredient.createdAt|date('d/m/Y H:i') }}</td>
-                    </tr>
+                <tr>
+                    <td>{{ ingredient.id }}</td>
+                    <td>{{ ingredient.nom }}</td>
+                    <td>{{ ingredient.prix|number_format(2, ',', ' ') }}</td>
+                    <td>{{ ingredient.createdAt|date('d/m/Y H:i') }}</td>
+                    <td><a href="{{ path('ingredient.edit', {id: ingredient.id}) }}">Modifier</a></td>
+                    <td>
+                        <form method="POST" action="{{ path('ingredient.delete', {id: ingredient.id}) }}" onsubmit="return confirm('Supprimer cet ingrédient ?');">
+                            <input type="hidden" name="_method" value="DELETE">
+                            <button type="submit" class="btn btn-danger btn-sm">Supprimer</button>
+                        </form>
+                    </td>
+                </tr>
                 {% else %}
                     <tr>
                         <td colspan="4">Aucun ingrédient trouvé.</td>

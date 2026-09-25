@@ -9,6 +9,7 @@ use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use App\Form\IngredientFormType;
+use App\Form\IngredientFormType_v3;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -165,5 +166,78 @@ final class IngredientController extends AbstractController
         return $this->render('ingredient/create_v2.html.twig', [
             'crea_form' => $crea_form->createView(),
         ]);
+    }
+
+    #[Route('/ingredient/create_and_store_v3', name: 'ingredient.create_and_store_v3', methods: ['GET', 'POST'])]
+    public function create_and_store_v3(Request $request, EntityManagerInterface $entityManager): Response
+    {
+        $ingredient = new Ingredient();
+        $crea_form = $this->createForm(IngredientFormType_v3::class, $ingredient, [
+            'submit_label' => 'Créer l\'ingrédient',
+        ]);
+
+        $crea_form->handleRequest($request);
+
+        if ($crea_form->isSubmitted() && $crea_form->isValid()) {
+            $entityManager->persist($ingredient);
+            $entityManager->flush();
+
+            $this->addFlash('success', 'Votre ingrédient a bien été créé avec succès !');
+
+            return $this->redirectToRoute('app_ingredient_index');
+        }
+
+        return $this->render('ingredient/create_v3.html.twig', [
+            'crea_form' => $crea_form->createView(),
+        ]);
+    }
+
+    #[Route('/ingredient/edit/{id}', name: 'ingredient.edit', methods: ['GET', 'PUT'])]
+    public function edit(int $id, IngredientRepository $ingredientRepository, Request $request, EntityManagerInterface $entityManager): Response
+    {
+        $ingredient = $ingredientRepository->find($id);
+
+        if (!$ingredient) {
+            throw $this->createNotFoundException('Ingrédient non trouvé.');
+        }
+
+        $form = $this->createForm(IngredientFormType_v3::class, $ingredient, [
+            'method' => 'PUT',
+            'submit_label' => 'Enregistrer les modifications',
+        ]);
+
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $ingredient2 = $form->getData();
+
+            $entityManager->persist($ingredient2);
+            $entityManager->flush();
+
+            $this->addFlash('success', 'Votre ingrédient a été modifié avec succès !');
+
+            return $this->redirectToRoute('app_ingredient_index');
+        }
+
+        return $this->render('ingredient/create_v3.html.twig', [
+            'crea_form' => $form->createView(),
+        ]);
+    }
+
+    #[Route('/ingredient/{id}', name: 'ingredient.delete', methods: ['DELETE'])]
+    public function delete(int $id, IngredientRepository $ingredientRepository, EntityManagerInterface $entityManager): Response
+    {
+        $ingredient = $ingredientRepository->find($id);
+
+        if (!$ingredient) {
+            throw $this->createNotFoundException('Ingrédient non trouvé.');
+        }
+
+        $entityManager->remove($ingredient);
+        $entityManager->flush();
+
+        $this->addFlash('success', 'Votre ingrédient a été supprimé avec succès !');
+
+        return $this->redirectToRoute('app_ingredient_index');
     }
 }

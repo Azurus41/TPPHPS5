@@ -12,7 +12,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
 
-class IngredientFormType extends AbstractType
+class IngredientFormType_v3 extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
@@ -32,7 +32,9 @@ class IngredientFormType extends AbstractType
                 ],
                 'help' => 'Le prix est obligatoire.',
             ])
-            ->add('save', SubmitType::class, ['label' => 'Créer'])
+            ->add('save', SubmitType::class, [
+                'label' => $options['submit_label'],
+            ])
         ;
     }
 
@@ -40,6 +42,7 @@ class IngredientFormType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => Ingredient::class,
+            'submit_label' => null,
         ]);
     }
 }

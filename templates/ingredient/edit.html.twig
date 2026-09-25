@@ -1,0 +1,41 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Modifier un ingrédient{% endblock %}
+
+{% block stylesheets %}
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f5f5f5;
+            margin: 0;
+            padding: 2rem;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+    </style>
+{% endblock %}
+
+{% block body %}
+    <div class="container">
+        <h1>Modifier un ingrédient</h1>
+        {{ form_start(form) }}
+            <div>
+                {{ form_label(form.nom) }}
+                {{ form_errors(form.nom) }}
+                {{ form_widget(form.nom) }}
+                {{ form_help(form.nom) }}
+            </div>
+            <div>
+                {{ form_label(form.prix) }}
+                {{ form_errors(form.prix) }}
+                {{ form_widget(form.prix) }}
+                {{ form_help(form.prix) }}
+            </div>
+            <div>
+                {{ form_row(form.save) }}
+            </div>
+        {{ form_end(form) }}
+    </div>
+{% endblock %}

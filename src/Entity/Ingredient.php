@@ -20,7 +20,8 @@ class Ingredient
     private ?string $nom = null;
 
     #[Assert\NotBlank]
-    #[Assert\Range(min: 0, max: 200)]
+    #[Assert\GreaterThanOrEqual(0, message: 'Cette valeur ne peut pas être négative.')]
+    #[Assert\LessThanOrEqual(200, message: 'Cette valeur ne doit pas dépasser 200.')]
     #[ORM\Column]
     private ?float $prix = null;
 
