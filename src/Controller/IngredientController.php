@@ -29,6 +29,142 @@ final class IngredientController extends AbstractController
         ]);
     }
 
+    #[Route('/ingredient/tomate', name: 'ingredient.tomate')]
+    public function index_ingredient_tomate(IngredientRepository $ingredientRepository): Response
+    {
+        return $this->render('ingredient/index.html.twig', [
+            'ingredients' => $ingredientRepository->find_ingredient_tomate(),
+        ]);
+    }
+
+    #[Route('/ingredient/tomate_5', name: 'ingredient.tomate_5')]
+    public function index_ingredient_tomate_5(IngredientRepository $ingredientRepository): Response
+    {
+        return $this->render('ingredient/index.html.twig', [
+            'ingredients' => $ingredientRepository->find_ingredient_tomate_5(),
+        ]);
+    }
+
+    #[Route('/ingredient/tom', name: 'ingredient.tom')]
+    public function index_ingredient_tom(IngredientRepository $ingredientRepository): Response
+    {
+        return $this->render('ingredient/index.html.twig', [
+            'ingredients' => $ingredientRepository->find_ingredient_tom5(),
+        ]);
+    }
+
+    #[Route('/ingredient/by_price/{prix}', name: 'ingredient.by_price')]
+    public function index_ingredient_by_price(float $prix, IngredientRepository $ingredientRepository): Response
+    {
+        return $this->render('ingredient/index.html.twig', [
+            'ingredients' => $ingredientRepository->find_ingredient_by_price($prix),
+        ]);
+    }
+
+    #[Route('/ingredient/by_price/{prix}/by_name/{nom}', name: 'ingredient.by_price_and_name')]
+    public function index_ingredient_by_price_and_name(float $prix, string $nom, IngredientRepository $ingredientRepository): Response
+    {
+        return $this->render('ingredient/index.html.twig', [
+            'ingredients' => $ingredientRepository->find_ingredient_by_price_and_name($prix, $nom),
+        ]);
+    }
+
+    #[Route('/ingredient/sql', name: 'ingredient.sql')]
+    public function index_sql(IngredientRepository $ingredientRepository): Response
+    {
+        return $this->render('ingredient/index.html.twig', [
+            'ingredients' => $ingredientRepository->findAll_sql(),
+        ]);
+    }
+
+    #[Route('/ingredient/tomate_sql', name: 'ingredient.tomate_sql')]
+    public function index_ingredient_tomate_sql(IngredientRepository $ingredientRepository): Response
+    {
+        return $this->render('ingredient/index.html.twig', [
+            'ingredients' => $ingredientRepository->find_ingredient_tomate_sql(),
+        ]);
+    }
+
+    #[Route('/ingredient/tomate_5_sql', name: 'ingredient.tomate_5_sql')]
+    public function index_ingredient_tomate_5_sql(IngredientRepository $ingredientRepository): Response
+    {
+        return $this->render('ingredient/index.html.twig', [
+            'ingredients' => $ingredientRepository->find_ingredient_tomate_5_sql(),
+        ]);
+    }
+
+    #[Route('/ingredient/tom_sql', name: 'ingredient.tom_sql')]
+    public function index_ingredient_tom_sql(IngredientRepository $ingredientRepository): Response
+    {
+        return $this->render('ingredient/index.html.twig', [
+            'ingredients' => $ingredientRepository->find_ingredient_tom_sql(),
+        ]);
+    }
+
+    #[Route('/ingredient/by_price_sql/{prix}', name: 'ingredient.by_price_sql')]
+    public function index_ingredient_by_price_sql(float $prix, IngredientRepository $ingredientRepository): Response
+    {
+        return $this->render('ingredient/index.html.twig', [
+            'ingredients' => $ingredientRepository->find_ingredient_by_price_sql($prix),
+        ]);
+    }
+
+    #[Route('/ingredient/by_price_sql/{prix}/by_name/{nom}', name: 'ingredient.by_price_and_name_sql')]
+    public function index_ingredient_by_price_and_name_sql(float $prix, string $nom, IngredientRepository $ingredientRepository): Response
+    {
+        return $this->render('ingredient/index.html.twig', [
+            'ingredients' => $ingredientRepository->find_ingredient_by_price_and_name_sql($prix, $nom),
+        ]);
+    }
+
+    #[Route('/ingredient/dql', name: 'ingredient.dql')]
+    public function index_dql(IngredientRepository $ingredientRepository): Response
+    {
+        return $this->render('ingredient/index.html.twig', [
+            'ingredients' => $ingredientRepository->findAll_dql(),
+        ]);
+    }
+
+    #[Route('/ingredient/tomate_dql', name: 'ingredient.tomate_dql')]
+    public function index_ingredient_tomate_dql(IngredientRepository $ingredientRepository): Response
+    {
+        return $this->render('ingredient/index.html.twig', [
+            'ingredients' => $ingredientRepository->find_ingredient_tomate_dql(),
+        ]);
+    }
+
+    #[Route('/ingredient/tomate_5_dql', name: 'ingredient.tomate_5_dql')]
+    public function index_ingredient_tomate_5_dql(IngredientRepository $ingredientRepository): Response
+    {
+        return $this->render('ingredient/index.html.twig', [
+            'ingredients' => $ingredientRepository->find_ingredient_tomate_5_dql(),
+        ]);
+    }
+
+    #[Route('/ingredient/tom_dql', name: 'ingredient.tom_dql')]
+    public function index_ingredient_tom_dql(IngredientRepository $ingredientRepository): Response
+    {
+        return $this->render('ingredient/index.html.twig', [
+            'ingredients' => $ingredientRepository->find_ingredient_tom_dql(),
+        ]);
+    }
+
+    #[Route('/ingredient/by_price_dql/{prix}', name: 'ingredient.by_price_dql')]
+    public function index_ingredient_by_price_dql(float $prix, IngredientRepository $ingredientRepository): Response
+    {
+        return $this->render('ingredient/index.html.twig', [
+            'ingredients' => $ingredientRepository->find_ingredient_by_price_dql($prix),
+        ]);
+    }
+
+    #[Route('/ingredient/by_price_dql/{prix}/by_name/{nom}', name: 'ingredient.by_price_and_name_dql')]
+    public function index_ingredient_by_price_and_name_dql(float $prix, string $nom, IngredientRepository $ingredientRepository): Response
+    {
+        return $this->render('ingredient/index.html.twig', [
+            'ingredients' => $ingredientRepository->find_ingredient_by_price_and_name_dql($prix, $nom),
+        ]);
+    }
+
     #[Route('/ingredient/greater_than_100', name: 'app_ingredient_greater_than_100')]
     public function index_only_greater_than_100(IngredientRepository $ingredientRepository): Response
     {

@@ -6,7 +6,7 @@
     <style>
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: #f5f5f5;
+            background: #ffffff;
             margin: 0;
             padding: 2rem;
         }
@@ -33,6 +33,10 @@
         tr:nth-child(even) {
             background: #fafafa;
         }
+        img {
+            display: block;
+            margin-bottom: 1rem;
+        }
         a {
             color: #007bff;
             text-decoration: none;
@@ -52,6 +56,8 @@
         {% endfor %}
 
         <p>Ingrédients et prix</p>
+        <img id="ingredient-icon" src="{{ asset('images/ingredient-icon.svg') }}" alt="Icône ingrédient" width="64" height="64" style="cursor: pointer;">
+        <p id="ingredient-message" style="display: none; color: #555; font-style: italic;">Vous avez cliqué sur l'icône des ingrédients !</p>
 
         <ul>
             {% for ingredient in ingredients %}
@@ -83,7 +89,7 @@
                     <td>{{ ingredient.createdAt|date('d/m/Y H:i') }}</td>
                     <td><a href="{{ path('ingredient.edit', {id: ingredient.id}) }}">Modifier</a></td>
                     <td>
-                        <form method="POST" action="{{ path('ingredient.delete', {id: ingredient.id}) }}" onsubmit="return confirm('Supprimer cet ingrédient ?');">
+                        <form method="POST" action="{{ path('ingredient.delete', {id: ingredient.id}) }}">
                             <input type="hidden" name="_method" value="DELETE">
                             <button type="submit" class="btn btn-danger btn-sm">Supprimer</button>
                         </form>
