@@ -1,0 +1,29 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Recettes{% endblock %}
+
+{% block body %}
+    <div class="container py-4">
+        {% for message in app.flashes('success') %}
+            <div class="alert alert-success">{{ message }}</div>
+        {% endfor %}
+
+        <h1 class="h4">{{ titre }}</h1>
+        <a href="{{ path('recette.create') }}" class="btn btn-primary mb-3">Créer une recette</a>
+        <p>{{ recettes|length }} recette(s)</p>
+
+        {% for recette in recettes %}
+            <div class="mb-3">
+                <strong>{{ recette.nom }}</strong>
+                ({{ recette.temps }} min, difficulté {{ recette.difficulte }}, {{ recette.ingredients|length }} ingrédients)
+                <ul>
+                    {% for ingredient in recette.ingredients %}
+                        <li>{{ ingredient.nom }} : {{ ingredient.prix|number_format(2, ',', ' ') }} EUR</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        {% else %}
+            <p>Aucune recette trouvée.</p>
+        {% endfor %}
+    </div>
+{% endblock %}
