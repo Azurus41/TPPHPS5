@@ -19,6 +19,48 @@
 {% block body %}
     <div class="container">
         <h1>Créer une recette</h1>
-        {{ form(crea_form) }}
+        {{ form_start(crea_form) }}
+            {{ form_row(crea_form.nom) }}
+            {{ form_row(crea_form.temps) }}
+            {{ form_row(crea_form.description) }}
+            {{ form_row(crea_form.prix) }}
+            {{ form_row(crea_form.difficulte) }}
+            {{ form_row(crea_form.ingredients) }}
+
+            <h5>Tags</h5>
+            <ul id="tags-list" class="list-unstyled"
+                data-prototype="{{ form_widget(crea_form.tags.vars.prototype)|e('html_attr') }}"
+                data-index="{{ crea_form.tags|length }}">
+                {% for tag in crea_form.tags %}
+                    <li class="mb-2 d-flex gap-2">{{ form_widget(tag) }}<button type="button" class="btn btn-sm btn-outline-danger remove-tag">Supprimer</button></li>
+                {% endfor %}
+            </ul>
+            {% do crea_form.tags.setRendered %}
+            <button type="button" id="add-tag" class="btn btn-sm btn-outline-secondary mb-3">Ajouter un tag</button>
+
+            {{ form_row(crea_form.save) }}
+        {{ form_end(crea_form) }}
+
+        <script>
+            (function () {
+                const list = document.getElementById('tags-list');
+                const addLi = (html) => {
+                    const li = document.createElement('li');
+                    li.className = 'mb-2 d-flex gap-2';
+                    li.innerHTML = html + '<button type="button" class="btn btn-sm btn-outline-danger remove-tag">Supprimer</button>';
+                    list.appendChild(li);
+                };
+                document.getElementById('add-tag').addEventListener('click', () => {
+                    const index = parseInt(list.dataset.index, 10);
+                    addLi(list.dataset.prototype.replace(/__name__/g, index));
+                    list.dataset.index = index + 1;
+                });
+                list.addEventListener('click', (e) => {
+                    if (e.target.classList.contains('remove-tag')) {
+                        e.target.closest('li').remove();
+                    }
+                });
+            })();
+        </script>
     </div>
 {% endblock %}

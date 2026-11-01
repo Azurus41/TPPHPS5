@@ -31,6 +31,7 @@ final class RecetteController extends AbstractController
         $crea_form->handleRequest($request);
 
         if ($crea_form->isSubmitted() && $crea_form->isValid()) {
+            $recette->setAuteur($this->getUser());
             $entityManager->persist($recette);
             $entityManager->flush();
 

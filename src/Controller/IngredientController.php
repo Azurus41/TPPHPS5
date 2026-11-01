@@ -13,15 +13,19 @@ use App\Form\IngredientFormType_v3;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 final class IngredientController extends AbstractController
 {
     #[Route('/ingredient', name: 'app_ingredient_index')]
-    public function index(IngredientRepository $ingredientRepository): Response
+    public function index(IngredientRepository $ingredientRepository, LoggerInterface $logger): Response
     {
+        $logger->info('AFFICHAGE DE TOUS LES INGREDIENTS');
+
         $ingredients = $ingredientRepository->findAll();
 
         return $this->render('ingredient/index.html.twig', [
@@ -217,6 +221,7 @@ final class IngredientController extends AbstractController
         ]);
     }
 
+    #[IsGranted('ROLE_USER')]
     #[Route('/ingredient/create', name: 'ingredient.create', methods: ['GET', 'POST'])]
     public function create(Request $request, EntityManagerInterface $entityManager): Response
     {
@@ -237,8 +242,9 @@ final class IngredientController extends AbstractController
         ]);
     }
 
+    #[IsGranted('ROLE_USER')]
     #[Route('/ingredient/store', name: 'ingredient.store', methods: ['POST'])]
-    public function store(Request $request, EntityManagerInterface $entityManager): Response
+    public function store(Request $request, EntityManagerInterface $entityManager, LoggerInterface $logger): Response
     {
         $data = $request->request->all();
 
@@ -246,14 +252,16 @@ final class IngredientController extends AbstractController
         $ingredient->setNom($data['form']['nom']);
         $ingredient->setPrix((float) $data['form']['prix']);
 
+        $logger->info("CREATION D'UN NOUVEL INGREDIENT");
         $entityManager->persist($ingredient);
         $entityManager->flush();
 
         return $this->redirectToRoute('app_ingredient_index');
     }
 
+    #[IsGranted('ROLE_USER')]
     #[Route('/ingredient/create_and_store', name: 'ingredient.create_and_store', methods: ['GET', 'POST'])]
-    public function create_and_store(Request $request, EntityManagerInterface $entityManager): Response
+    public function create_and_store(Request $request, EntityManagerInterface $entityManager, LoggerInterface $logger): Response
     {
         $ingredient = new Ingredient();
         $crea_form = $this->createFormBuilder($ingredient)
@@ -271,6 +279,7 @@ final class IngredientController extends AbstractController
             $ingredient->setNom($data->getNom());
             $ingredient->setPrix($data->getPrix());
 
+            $logger->info("CREATION D'UN NOUVEL INGREDIENT");
             $entityManager->persist($ingredient);
             $entityManager->flush();
 
@@ -282,8 +291,9 @@ final class IngredientController extends AbstractController
         ]);
     }
 
+    #[IsGranted('ROLE_USER')]
     #[Route('/ingredient/create_and_store_v2', name: 'ingredient.create_and_store_v2', methods: ['GET', 'POST'])]
-    public function create_and_store_v2(Request $request, EntityManagerInterface $entityManager): Response
+    public function create_and_store_v2(Request $request, EntityManagerInterface $entityManager, LoggerInterface $logger): Response
     {
         $ingredient = new Ingredient();
         $crea_form = $this->createForm(IngredientFormType::class, $ingredient);
@@ -291,6 +301,7 @@ final class IngredientController extends AbstractController
         $crea_form->handleRequest($request);
 
         if ($crea_form->isSubmitted() && $crea_form->isValid()) {
+            $logger->info("CREATION D'UN NOUVEL INGREDIENT");
             $entityManager->persist($ingredient);
             $entityManager->flush();
 
@@ -304,8 +315,9 @@ final class IngredientController extends AbstractController
         ]);
     }
 
+    #[IsGranted('ROLE_USER')]
     #[Route('/ingredient/create_and_store_v3', name: 'ingredient.create_and_store_v3', methods: ['GET', 'POST'])]
-    public function create_and_store_v3(Request $request, EntityManagerInterface $entityManager): Response
+    public function create_and_store_v3(Request $request, EntityManagerInterface $entityManager, LoggerInterface $logger): Response
     {
         $ingredient = new Ingredient();
         $crea_form = $this->createForm(IngredientFormType_v3::class, $ingredient, [
@@ -315,6 +327,7 @@ final class IngredientController extends AbstractController
         $crea_form->handleRequest($request);
 
         if ($crea_form->isSubmitted() && $crea_form->isValid()) {
+            $logger->info("CREATION D'UN NOUVEL INGREDIENT");
             $entityManager->persist($ingredient);
             $entityManager->flush();
 
@@ -328,6 +341,7 @@ final class IngredientController extends AbstractController
         ]);
     }
 
+    #[IsGranted('ROLE_ADMIN')]
     #[Route('/ingredient/edit/{id}', name: 'ingredient.edit', methods: ['GET', 'PUT'])]
     public function edit(int $id, IngredientRepository $ingredientRepository, Request $request, EntityManagerInterface $entityManager): Response
     {
@@ -360,6 +374,7 @@ final class IngredientController extends AbstractController
         ]);
     }
 
+    #[IsGranted('ROLE_ADMIN')]
     #[Route('/ingredient/{id}', name: 'ingredient.delete', methods: ['DELETE'])]
     public function delete(int $id, IngredientRepository $ingredientRepository, EntityManagerInterface $entityManager): Response
     {
@@ -375,5 +390,29 @@ final class IngredientController extends AbstractController
         $this->addFlash('success', 'Votre ingrédient a été supprimé avec succès !');
 
         return $this->redirectToRoute('app_ingredient_index');
+    }
+
+    #[Route('/ingredient/by_slug/{slug}', name: 'ingredient.show_by_slug', methods: ['GET'])]
+    public function show_by_slug(string $slug, IngredientRepository $ingredientRepository): Response
+    {
+        $ingredient = $ingredientRepository->findOneBy(['slug' => $slug]);
+
+        if (!$ingredient) {
+            throw $this->createNotFoundException('Ingrédient non trouvé.');
+        }
+
+        return $this->render('ingredient/show.html.twig', ['ingredient' => $ingredient]);
+    }
+
+    #[Route('/ingredient/{id}', name: 'ingredient.show', requirements: ['id' => '\d+'], methods: ['GET'])]
+    public function show(int $id, IngredientRepository $ingredientRepository): Response
+    {
+        $ingredient = $ingredientRepository->find($id);
+
+        if (!$ingredient) {
+            throw $this->createNotFoundException('Ingrédient non trouvé.');
+        }
+
+        return $this->render('ingredient/show.html.twig', ['ingredient' => $ingredient]);
     }
 }
