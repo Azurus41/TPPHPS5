@@ -5,13 +5,14 @@ namespace App\Repository;
 use App\Entity\Ingredient;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use Psr\Log\LoggerInterface;
 
 /**
  * @extends ServiceEntityRepository<Ingredient>
  */
 class IngredientRepository extends ServiceEntityRepository
 {
-    public function __construct(ManagerRegistry $registry)
+    public function __construct(ManagerRegistry $registry, private LoggerInterface $logger)
     {
         parent::__construct($registry, Ingredient::class);
     }
@@ -132,6 +133,9 @@ class IngredientRepository extends ServiceEntityRepository
      */
     public function find_ingredient_tom5(): array
     {
+        $this->logger->info('APPEL DE find_ingredient_tom');
+        $this->logger->error('ERREUR DANS find_ingredient_tom');
+
         return $this->createQueryBuilder('i')
             ->andWhere('i.nom LIKE :nom')
             ->setParameter('nom', 'tomate%')

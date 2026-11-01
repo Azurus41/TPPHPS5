@@ -1,0 +1,10 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello{% endblock %}
+
+{% block body %}
+    <div class="container mt-4">
+        <p>Notre service de calcul de taxe est capable de calculer la TVA et le TTC.</p>
+        <p>Pour un prix de {{ prixHT }} EUR HT, le service a calculé que la TVA était de {{ tva|number_format(2, ',', ' ') }} EUR et le TTC de {{ ttc|number_format(2, ',', ' ') }} EUR.</p>
+    </div>
+{% endblock %}

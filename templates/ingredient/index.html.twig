@@ -49,11 +49,24 @@
 
 {% block body %}
     <div class="container">
+        {% for message in app.flashes('danger') %}
+            <div class="alert alert-danger">{{ message }}</div>
+        {% endfor %}
         {% for message in app.flashes('success') %}
             <div class="alert alert-success">
                 {{ message }}
             </div>
         {% endfor %}
+
+        <div class="mb-3">
+            {% if is_granted('IS_AUTHENTICATED_FULLY') %}
+                Connecté : {{ app.user.userIdentifier }} -
+                <a href="{{ path('app_logout') }}">Se déconnecter</a>
+            {% else %}
+                <a href="{{ path('app_login') }}">Se connecter</a> -
+                <a href="{{ path('app_register') }}">S'inscrire</a>
+            {% endif %}
+        </div>
 
         <p>Ingrédients et prix</p>
         <img id="ingredient-icon" src="{{ asset('images/ingredient-icon.svg') }}" alt="Icône ingrédient" width="64" height="64" style="cursor: pointer;">
@@ -69,7 +82,9 @@
             {% endfor %}
         </ul>
 
+        {% if is_granted('ROLE_USER') %}
         <a href="{{ path('ingredient.create_and_store_v3') }}" class="btn btn-primary mb-3">Créer un ingrédient</a>
+        {% endif %}
 
         <table>
             <thead>
@@ -84,9 +99,10 @@
                 {% for ingredient in ingredients %}
                 <tr>
                     <td>{{ ingredient.id }}</td>
-                    <td>{{ ingredient.nom }}</td>
+                    <td><a href="{{ path('ingredient.show_by_slug', {slug: ingredient.slug}) }}">{{ ingredient.nom }}</a></td>
                     <td>{{ ingredient.prix|number_format(2, ',', ' ') }}</td>
                     <td>{{ ingredient.createdAt|date('d/m/Y H:i') }}</td>
+                    {% if is_granted('ROLE_ADMIN') %}
                     <td><a href="{{ path('ingredient.edit', {id: ingredient.id}) }}">Modifier</a></td>
                     <td>
                         <form method="POST" action="{{ path('ingredient.delete', {id: ingredient.id}) }}">
@@ -94,6 +110,7 @@
                             <button type="submit" class="btn btn-danger btn-sm">Supprimer</button>
                         </form>
                     </td>
+                    {% endif %}
                 </tr>
                 {% else %}
                     <tr>

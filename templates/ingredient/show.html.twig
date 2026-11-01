@@ -1,0 +1,17 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ ingredient.nom }}{% endblock %}
+
+{% block body %}
+    <div class="container">
+        <h1>{{ ingredient.nom }}</h1>
+        <ul>
+            <li>N° : {{ ingredient.id }}</li>
+            <li>Slug : {{ ingredient.slug }}</li>
+            <li>Prix : {{ ingredient.prix|number_format(2, ',', ' ') }} EUR</li>
+            <li>Créé le : {{ ingredient.createdAt|date('d/m/Y H:i') }}</li>
+            <li>Modifié le : {{ ingredient.updatedAt|date('d/m/Y H:i') }}</li>
+        </ul>
+        <a href="{{ path('app_ingredient_index') }}">Retour à la liste</a>
+    </div>
+{% endblock %}

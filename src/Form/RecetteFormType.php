@@ -6,6 +6,7 @@ use App\Entity\Ingredient;
 use App\Entity\Recette;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
@@ -43,6 +44,15 @@ class RecetteFormType extends AbstractType
                 'constraints' => [
                     new Count(exactly: 3, exactMessage: 'Une recette doit avoir exactement 3 ingrédients.'),
                 ],
+            ])
+            ->add('tags', CollectionType::class, [
+                'entry_type' => TagFormType::class,
+                'allow_add' => true,
+                'allow_delete' => true,
+                'by_reference' => false,
+                'required' => false,
+                'label' => 'Tags',
+                'attr' => ['class' => 'tags-collection'],
             ])
             ->add('save', SubmitType::class, ['label' => 'Créer la recette'])
         ;
