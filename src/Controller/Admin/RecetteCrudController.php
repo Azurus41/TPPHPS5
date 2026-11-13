@@ -36,8 +36,8 @@ class RecetteCrudController extends AbstractCrudController
             IntegerField::new('difficulte'),
             DateTimeField::new('createdAt')->hideOnForm(),
             DateTimeField::new('updatedAt')->hideOnForm(),
-            AssociationField::new('auteur')->hideOnIndex(),
-            AssociationField::new('ingredients')->formatValue(function ($value, $entity) {
+            AssociationField::new('auteur')->hideOnIndex()->setFormTypeOption('choice_label', 'email'),
+            AssociationField::new('ingredients')->setFormTypeOption('choice_label', 'nom')->formatValue(function ($value, $entity) {
                 $label = '';
                 foreach ($entity->getIngredients() as $ingredient) {
                     $label .= $ingredient->getNom().' ('.$ingredient->getId().'), ';
