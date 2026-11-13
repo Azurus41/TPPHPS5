@@ -40,8 +40,12 @@ composer install
 4. Assets : `php bin/console importmap:install`
 5. Lancer **MailHog** (`MailHog.exe`), puis le serveur :
    ```bash
-   symfony serve        # ou : php -S 127.0.0.1:8000 -t public
+   symfony serve        # ou : php -S 127.0.0.1:8000 -t public public/index.php
    ```
+   Avec `php -S`, le routeur `public/index.php` est **obligatoire** : sans lui, les CSS/JS servis par
+   AssetMapper (Swagger, EasyAdmin) renvoient 404.
+   Si le projet est sur un disque lent (clé USB…), mettre le cache sur C: via un `.env.local` :
+   `APP_CACHE_DIR=C:/Users/<vous>/symfony-cache/TPPHPS5`
    Adresse utilisée ci-dessous : `http://127.0.0.1:8000` (noté `BASE`).
 
 `.env` contient `MAILER_DSN=smtp://localhost:1025` (MailHog) ; sans MailHog, l'envoi d'emails échoue proprement (message d'erreur / log) mais l'appli ne plante pas.
@@ -84,7 +88,7 @@ Tout a été testé en HTTP/curl, mais **rien n'a été vu à l'écran**. Cocher
 ### API REST + JWT (Missions 34-36)
 - [ ] `BASE/api` : page Swagger UI (publique).
 - [ ] Récupérer un token : `POST BASE/api/login_check` avec `{"email":"admin@a.com","password":"1234"}` (Swagger, Insomnia, Postman et curl). Le décoder sur https://jwt.io avec `config/jwt/public.pem` → « signature verified » (RS256, rôles, email).
-- [ ] Swagger : bouton **Authorize** → `Bearer <token>` → tester les opérations de `/api/ingredients` (GET, POST, PUT, PATCH, DELETE).
+- [ ] Swagger : bouton **Authorize** → coller le token seul (Swagger ajoute `Bearer` lui-même) → tester les opérations de `/api/ingredients` (GET, POST, PUT, PATCH, DELETE).
 - [ ] Filtres : `BASE/api/ingredients?nom=ingr_a` et `?prix[gte]=100`.
 - [ ] `/api/recettes` : créer une recette avec un utilisateur normal, puis essayer de modifier/supprimer celle d'un autre → **403** ; l'admin peut tout modifier.
 - Note : l'API n'accepte que `application/ld+json` par défaut (header `Accept: application/ld+json`).
@@ -92,7 +96,10 @@ Tout a été testé en HTTP/curl, mais **rien n'a été vu à l'écran**. Cocher
 ### Posts et cache (Missions 37-38)
 - [ ] `BASE/post` : ~5 s la 1ère fois, puis rapide (cache 20 s) ; recharger après 20 s → de nouveau lent. `php bin/console cache:clear` vide le cache.
 - [ ] `BASE/post_with_token` : affiche les posts.
-- ⚠ **freefakeapi.io n'existe plus** (domaine à vendre) : les pages affichent 3 posts d'exemple. Les URLs de l'API distante dans `src/Controller/PostController.php` sont des suppositions. Pour les tests Insomnia de la Mission 37, utiliser une autre fausse API (ex. jsonplaceholder.typicode.com) ou en discuter avec l'enseignant.
+- **freefakeapi.io n'existe plus** : la Mission 37 utilise **DummyJSON** (https://dummyjson.com/docs).
+  - API libre : `GET https://dummyjson.com/posts` (users : `/users`, créer : `POST /posts/add`, `PUT`/`PATCH`/`DELETE /posts/1`, commentaires : `POST /comments/add`).
+  - API sécurisée : `POST https://dummyjson.com/auth/login` avec `{"username":"emilys","password":"emilyspass"}` → `accessToken`, puis `GET https://dummyjson.com/auth/posts` avec `Authorization: Bearer <accessToken>` (sans token : « Access Token is required »).
+  - Identifiants dans `.env` (`DUMMYJSON_USER`, `DUMMYJSON_PASSWORD`).
 
 ### Administration EasyAdmin (Mission 39)
 - [ ] `BASE/admin` (connecté en admin ; un simple user doit être refusé) : tableau de bord personnalisé + menu.

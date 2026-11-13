@@ -5,3 +5,9 @@ api_platform:
         stateless: true
         cache_headers:
             vary: ['Content-Type', 'Authorization', 'Origin']
+    # Mission 35 : bouton "Authorize" de Swagger UI (le token JWT est envoyé dans le header Authorization)
+    swagger:
+        api_keys:
+            JWT:
+                name: Authorization
+                type: header

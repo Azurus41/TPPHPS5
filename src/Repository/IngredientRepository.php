@@ -59,7 +59,7 @@ class IngredientRepository extends ServiceEntityRepository
         return $this->run_dql(' WHERE i.prix = :prix AND i.nom = :nom', ['prix' => $prix, 'nom' => $nom]);
     }
 
-    private const SELECT_SQL ='SELECT id, nom, prix, created_at AS createdAt FROM ingredient';
+    private const SELECT_SQL ='SELECT id, nom, prix, slug, created_at AS createdAt, updated_at AS updatedAt FROM ingredient';
 
     private function run_sql(string $where = '', array $params = []): array
     {
